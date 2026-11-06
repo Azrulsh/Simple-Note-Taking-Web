@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User; 
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -42,17 +44,40 @@ class LoginController extends Controller
     }
 
     // Handle login process
-    public function postlogin(Request $request){
+    public function postlogin(Request $request)
+    {
         $request->validate([
-            'name' => 'required', 
-            'password' => 'required' 
+            'name' => 'required|string',
+            'password' => 'required|string',
         ]);
 
         $credentials = $request->only('name', 'password');
+
+        // Unique throttle key based on username and IP address
+        $key = 'login:' . Str::transliterate(
+            Str::lower($request->input('name'))
+        ) . '|' . $request->ip();
+
+        // Check whether login attempts have exceeded the limit
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = RateLimiter::availableIn($key);
+
+            return back()->with('error', "Too many login attempts. Please try again in {$seconds} seconds.");
+        }
+
+        // Attempt authentication
         if (Auth::attempt($credentials)) {
+            RateLimiter::clear($key);
+
+            $request->session()->regenerate();
+
             return redirect()->route('manage-note.IndexNote')->with('success', 'Logged in successfully');
         }
-        return redirect(route('login'))->with("error", "Login credentials do not match our records");
+
+        // Record failed login attempt (60-second decay)
+        RateLimiter::hit($key, 60);
+
+        return back()->with('error','Login credentials do not match our records');
     }
     
     // Log user out
