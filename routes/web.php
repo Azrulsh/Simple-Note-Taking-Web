@@ -32,6 +32,4 @@ Route::get('/manage-login/Login', [LoginController::class, 'login'])->name('logi
 Route::post('/manage-login/Login', [LoginController::class, 'postlogin'])->name('manage-login.PostLogin');
 Route::get('/manage-login/Registration',[LoginController::class, 'registration'])->name('manage-login.Registration');
 Route::post('/manage-login/Registration', [LoginController::class, 'postregistration'])->name('manage-login.PostRegistration');
-Route::get('/manage-login/Logout', [LoginController::class, 'logout'])->name('manage-login.Logout');
-
-
+Route::post('/manage-login/Logout', [LoginController::class, 'logout'])->middleware('auth')->name('manage-login.Logout');

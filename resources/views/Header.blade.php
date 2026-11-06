@@ -10,7 +10,10 @@
           </li>
           @auth
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('manage-login.Logout')}}">Logout</a>
+                <form action="{{ route('manage-login.Logout') }}" method="POST">
+                  @csrf
+                  <button type="submit" class="nav-link"> Logout </button>
+                </form>
             </li>
           @else
           <li class="nav-item">
