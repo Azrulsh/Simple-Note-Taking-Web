@@ -12,10 +12,7 @@ class EditNoteRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply for editing a note.
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    //Get the validation rules that apply for editing a note.
     public function rules(): array
     {
         return [ 'name' => 'required', 'description' => 'required' ];

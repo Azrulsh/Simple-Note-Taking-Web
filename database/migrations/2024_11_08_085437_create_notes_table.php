@@ -10,11 +10,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('note_record', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name');
             $table->string('description');
-            $table->datetime('created_at');
-            $table->datetime('updated_at');
+            // Adding a foreign key for login_record table
+            $table->unsignedBigInteger('user_id');  
+            $table->timestamps();
+             // Set up a foreign key constraint linking user_id to the login_record table
+             $table->foreign('user_id')->references('id')->on('login_record')->onDelete('cascade');
         });
     }
 

@@ -83,5 +83,3 @@ $(document).on('click', '#delete', function(e) {
 
 
 
-
-

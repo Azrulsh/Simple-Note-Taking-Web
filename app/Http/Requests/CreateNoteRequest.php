@@ -12,10 +12,7 @@ class CreateNoteRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply for creating a note.
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    // Get the validation rules that apply for creating a note.
     public function rules(): array
     {
         return [ 'name' => 'required', 'description' => 'required' ];

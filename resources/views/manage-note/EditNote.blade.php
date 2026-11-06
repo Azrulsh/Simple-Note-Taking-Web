@@ -1,5 +1,5 @@
-@extends('manage-note.LayoutNote')
-    
+@extends('Layout')
+@section('title', 'Edit Note Page')
 @section('content')
 <div class="card mt-5">
   <h2 class="card-header">Edit Note</h2>

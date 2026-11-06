@@ -1,5 +1,5 @@
-@extends('manage-note.LayoutNote')
-    
+@extends('Layout')
+@section('title', 'Create Note Page')   
 @section('content') 
 <div class="card mt-5">
   <h2 class="card-header">Add New Note</h2>
@@ -16,7 +16,7 @@
                 name="name" 
                 class="form-control @error('name') is-invalid @enderror" 
                 id="inputName" 
-                placeholder="Enter the name of the note...">
+                placeholder="Enter the name of the note">
             @error('name')
                 <div class="form-text text-danger">{{ $message }}</div>
             @enderror
