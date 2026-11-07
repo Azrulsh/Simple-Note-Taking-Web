@@ -58,6 +58,16 @@
 
         showRemark(noteId);
 
+        // Reset Add Remark form when modal is closed
+        $('#addmodal').on('hidden.bs.modal', function() {
+            $('#addremark')[0].reset();
+        });
+
+        // Reset Edit Remark form when modal is closed
+        $('#editmodal').on('hidden.bs.modal', function() {
+            $('#editremark')[0].reset();
+        });
+
         // Create Remark function
         $('#addremark').on('submit', function(e){
             e.preventDefault();

@@ -9,7 +9,7 @@
         @endsession
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-success btn-sm" id="create" href="{{ route('manage-note.CreateNote') }}"> <i class="fa fa-plus"></i>Create New Note</a>
+            <a class="btn btn-success btn-sm" href="{{ route('manage-note.CreateNote') }}"> <i class="fa fa-plus"></i>Create New Note</a>
         </div>
         <table class="table table-bordered table-striped mt-4">
             <thead>
