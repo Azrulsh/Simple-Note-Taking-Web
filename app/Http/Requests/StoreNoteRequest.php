@@ -15,6 +15,6 @@ class StoreNoteRequest extends FormRequest
     //Get the validation rules that apply for storing a note.
     public function rules(): array
     {
-        return [ 'name' => 'required', 'description' => 'required'  ];
+        return [ 'name' => 'required|string|max:255', 'description' => 'required|string|max:255',];
     }
 }

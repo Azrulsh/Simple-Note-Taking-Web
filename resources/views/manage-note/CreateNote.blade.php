@@ -16,7 +16,8 @@
                 name="name" 
                 class="form-control @error('name') is-invalid @enderror" 
                 id="inputName" 
-                placeholder="Enter the name of the note">
+                placeholder="Enter the name of the note"
+                value="{{ old('name') }}">
             @error('name')
                 <div class="form-text text-danger">{{ $message }}</div>
             @enderror
@@ -24,12 +25,12 @@
   
         <div class="mb-3">
             <label for="inputDescription" class="form-label"><strong>Description:</strong></label>
-            <textarea 
-                class="form-control @error('description') is-invalid @enderror" 
-                style="height:150px" 
-                name="description" 
-                id="inputDescription" 
-                placeholder="Enter the description of the note..."></textarea>
+            <textarea
+                class="form-control @error('description') is-invalid @enderror"
+                style="height:150px"
+                name="description"
+                id="inputDescription"
+                placeholder="Enter the description of the note...">{{ old('description') }}</textarea>
             @error('description')
                 <div class="form-text text-danger">{{ $message }}</div>
             @enderror
