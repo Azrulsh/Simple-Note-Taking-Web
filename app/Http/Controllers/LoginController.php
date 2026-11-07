@@ -19,11 +19,11 @@ class LoginController extends Controller
     // Handle registration process
     public function postregistration(Request $request){
         $request->validate([
-            'name' => 'required|unique:login_record', 
-            'email' => 'required|email|unique:login_record', 
-            'password' => 'required|min:5' 
+            'name' => 'required|string|max:255|unique:login_record,name',
+            'email' => 'required|string|email|max:255|unique:login_record,email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
-
+        
         // Prepare data for user creation
         $data['name'] = $request->name;
         $data['email'] = $request->email;
