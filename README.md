@@ -1,6 +1,6 @@
 # Simple Note-Taking Web Application
 
-A Laravel 11 web application for managing personal notes and remarks. Users can register, log in, create and manage notes, and add remarks to notes through an AJAX-powered interface. Ownership checks ensure that only the creator of a note or remark can modify or delete it.
+A Laravel 12 web application for managing personal notes and remarks. Users can register, log in, create and manage notes, and add remarks to notes through an AJAX-powered interface. Ownership checks ensure that only the creator of a note or remark can modify or delete it.
 
 ## Features
 
@@ -27,12 +27,12 @@ A Laravel 11 web application for managing personal notes and remarks. Users can 
 
 | Component | Technology |
 | --- | --- |
-| Backend | PHP 8.2+, Laravel 11 |
+| Backend | PHP 8.2+, Laravel 12 (verified on 12.71.0) |
 | Database | MySQL / MariaDB (tested locally with XAMPP) |
 | Frontend | Laravel Blade, HTML, CSS, Bootstrap 5 |
 | Dynamic interactions | JavaScript, jQuery AJAX, SweetAlert2 |
 | Testing | PHPUnit / Laravel Feature Tests |
-| Frontend tooling | Node.js, npm, Vite |
+| Frontend tooling | Node.js, npm, Vite 8, Laravel Vite Plugin 3 |
 
 ## Database Structure
 
@@ -59,7 +59,7 @@ Foreign keys are configured to cascade-delete related records where defined in t
 - PHP 8.2 or later with extensions required by Laravel
 - Composer
 - XAMPP with MySQL or MariaDB enabled
-- Node.js and npm (for frontend tooling)
+- Node.js 20.19+ or 22.12+ (Node.js 24.22.2 used during the upgrade) and npm
 
 ### Setup
 
@@ -116,7 +116,7 @@ Foreign keys are configured to cascade-delete related records where defined in t
 7. Install frontend dependencies and build assets if needed:
 
    ```powershell
-   npm install
+   npm ci
    npm run build
    ```
 
@@ -151,7 +151,7 @@ The project includes Laravel Feature Tests for authentication, login rate limiti
    php artisan test
    ```
 
-At the last locally reported full run, **63 tests passed with 267 assertions**. Test results can change as code and dependencies are updated.
+After upgrading to Laravel 12 and Vite 8, the most recent reported full run passed **63 tests (267 assertions)**. The production frontend build and manual application checks were also reported successful. Results can change as code and dependencies are updated.
 
 ## Relevant Project Files
 
@@ -179,12 +179,24 @@ routes/web.php
 tests/Feature/
 ```
 
+## Verification Commands
+
+```powershell
+php artisan --version
+php artisan test
+npm run build
+composer audit
+npm audit
+```
+
+The reported upgrade environment used Laravel **12.71.0**, Vite **8.3.6**, and Laravel Vite Plugin **3.2.1**. Actual installed versions may change within the version constraints in the dependency manifests.
+
 ## Security and Maintenance Notes
 
 - Only note/remark creators may edit or delete their records; authorization is enforced by the backend.
 - Validation rules apply to user-provided content and record identifiers.
 - Keep `.env`, `.env.testing`, local logs, and credentials out of version control and shared archives.
-- Dependency security advisories have been identified through Composer and npm audits. Review and remediate them before any public or production deployment; passing application tests does **not** mean dependencies are vulnerability-free.
+- After the Laravel 12 and Vite 8 upgrades (November 7, 2026), both `composer audit` and `npm audit` reported **0 known vulnerabilities**. Continue checking regularly; a clean audit and passing tests do not guarantee the application is free of security issues.
 
 ## License
 
