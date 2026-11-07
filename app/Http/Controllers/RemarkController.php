@@ -28,70 +28,89 @@ class RemarkController extends Controller
     // Fetch remarks data for specific note using AJAX request
     public function getremark(Request $request)
     {
-        $noteId = $request->input('note_id'); // Get the note ID from the request
-        $remarks = RemarkRecord::with('user')->where('note_id', $noteId)->get(); // Fetch all remarks related to the note
-        return view('manage-remark.ListRemark', compact('remarks')); // Return the remarks view with the data
+        $validated = $request->validate([
+            'note_id' => 'required|integer|exists:note_record,id',
+        ]);
+
+        $remarks = RemarkRecord::with('user')
+            ->where('note_id', $validated['note_id'])
+            ->get();
+
+        return view('manage-remark.ListRemark', compact('remarks'));
     }
 
     // Save remark and associate it with a specific note
     public function saveremark(Request $request)
     {
-        if ($request->ajax()) {
-            $request->validate([
-                'description' => 'required|string|max:255',
-                'note_id' => 'required|exists:note_record,id',
-            ]);
-
-            // Create a new Remark instance
-            $remark = new RemarkRecord;
-            $remark->description = $request->input('description');
-            $remark->note_id = $request->input('note_id'); // Link remark to the note
-            $remark->user_id = Auth::id(); // Link remark to currently logged-in user
-            $remark->save(); // Save remark to the database
-
-            return response($remark); // Return saved remark as a response
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'AJAX request required.'
+            ], 400);
         }
+
+        $request->validate([
+            'description' => 'required|string|max:255',
+            'note_id' => 'required|exists:note_record,id',
+        ]);
+
+        // Create a new Remark instance
+        $remark = new RemarkRecord;
+        $remark->description = $request->input('description');
+        $remark->note_id = $request->input('note_id'); // Link remark to the note
+        $remark->user_id = Auth::id(); // Link remark to currently logged-in user
+        $remark->save(); // Save remark to the database
+
+        return response($remark); // Return saved remark as a response
     }
 
     // Update an existing remark
-    public function updateremark(Request $request)
+   public function updateremark(Request $request)
     {
-        if ($request->ajax()) {
-            $request->validate([
-                'id' => 'required|exists:remark_record,id', 
-                'description' => 'required|string|max:255', 
-            ]);
-
-            $remark = RemarkRecord::find($request->id);
-            // Check if the authenticated user is the remark creator
-            if ($remark->user_id !== Auth::id()) {
-                return response()->json(['error' => 'You are not authorized to update this remark.'], 403);
-            }
-
-            $remark->description = $request->input('description');
-            $remark->save(); 
-            return response($remark); 
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'AJAX request required.'
+            ], 400);
         }
+
+        $request->validate([
+            'id' => 'required|exists:remark_record,id',
+            'description' => 'required|string|max:255',
+        ]);
+
+        $remark = RemarkRecord::find($request->id);
+        // Check if the authenticated user is the remark creator
+        if ($remark->user_id !== Auth::id()) {
+            return response()->json(['error' => 'You are not authorized to update this remark.'], 403);
+        }
+
+        $remark->description = $request->input('description');
+        $remark->save();
+        return response($remark);
     }
 
     // Delete a remark by ID
     public function deleteremark(Request $request)
     {
-        if ($request->ajax()) {
-            $request->validate([
-                'id' => 'required|exists:remark_record,id', // Ensure the remark ID exists
-            ]);
-
-            // Find the remark by ID
-            $remark = RemarkRecord::find($request->id);
-            // Check if the authenticated user is the remark creator
-            if ($remark->user_id !== Auth::id()) {
-                return response()->json(['error' => 'You are not authorized to delete this remark.'], 403);
-            }
-
-            RemarkRecord::destroy($request->id);
-            return response()->json(['success' => 'Remark deleted successfully']); 
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'AJAX request required.'
+            ], 400);
         }
+
+        $request->validate([
+            'id' => 'required|exists:remark_record,id', // Ensure the remark ID exists
+        ]);
+
+        // Find the remark by ID
+        $remark = RemarkRecord::find($request->id);
+
+        // Check if the authenticated user is the remark creator
+        if ($remark->user_id !== Auth::id()) {
+            return response()->json(['error' => 'You are not authorized to delete this remark.'], 403);
+        }
+
+        RemarkRecord::destroy($request->id);
+        return response()->json(['success' => 'Remark deleted successfully']);
     }
 
     // Check permission to edit a remark

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\NoteRecord;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Http\Requests\EditNoteRequest;
 use App\Http\Requests\CreateNoteRequest;
@@ -30,10 +29,6 @@ class NoteController extends Controller
     // Store created note in DB
     public function store(CreateNoteRequest $request): RedirectResponse
     {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You must be logged in to create a note.');
-        }
-
         // Create the note with the logged-in user's ID
         NoteRecord::create([
             'name' => $request->name,
@@ -45,14 +40,14 @@ class NoteController extends Controller
     }
 
     // Display note based on id
-    public function show(Request $request, $id)
+    public function show($id)
     {
         $note = NoteRecord::with('user')->findOrFail($id);
         return view('manage-note.ListAllNote', compact('note'));
     }
 
     // Display interface for editing existing note.
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         $note = NoteRecord::findOrFail($id);
         if ($note->user_id !== Auth::id()) {

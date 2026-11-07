@@ -9,7 +9,7 @@
         @endsession
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-success btn-sm" id="create "href="{{ route('manage-note.CreateNote') }}"> <i class="fa fa-plus"></i>Create New Note</a>
+            <a class="btn btn-success btn-sm" id="create" href="{{ route('manage-note.CreateNote') }}"> <i class="fa fa-plus"></i>Create New Note</a>
         </div>
         <table class="table table-bordered table-striped mt-4">
             <thead>
@@ -49,7 +49,7 @@
                                 <a class="btn btn-primary btn-sm" href="{{ route('manage-note.EditNote', $note->id) }}"> <i class="fa-solid fa-pen-to-square"></i>Edit</a>
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" id="delete" class="btn btn-danger btn-sm">
+                                <button type="submit" class="delete-note btn btn-danger btn-sm">
                                     <i class="fa-solid fa-trash"></i>Delete
                                 </button>
                             @endif

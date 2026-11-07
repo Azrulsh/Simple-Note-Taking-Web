@@ -11,13 +11,13 @@ class RemarkRecord extends Model
     protected $table = 'remark_record';
     protected $fillable =[ 'description', 'note_id', 'user_id' ];
 
-    // Define the relationship with user(one user many remark)
+    // Each remark belongs to one note
     public function note()
     {
         return $this->belongsTo(NoteRecord::class, 'note_id');
     }
 
-    // Define the relationship with user(one note many remark)
+    // Each remark belongs to one user
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -49,7 +49,7 @@ $(document).on('click', '#edit', function(e) {
 });
 
 // SweetAlert2 delete confirmation message
-$(document).on('click', '#delete', function(e) {
+$(document).on('click', '.delete-note', function(e) {
     e.preventDefault(); // Prevent default action
     var form = $(this).closest('form'); // Get the closest form element
     Swal.fire({

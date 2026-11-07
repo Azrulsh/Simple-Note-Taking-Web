@@ -19,7 +19,7 @@
             <div id="flash-message" class="alert alert-success">{{ session('success') }}</div> 
             @endif
 
-        <form class="ms-auto me-auto mt-5" style="width: 500px" action="{{ route('manage-login.PostRegistration') }}" method="POST">
+        <form class="ms-auto me-auto mt-5" style="width: 100%; max-width: 500px;" action="{{ route('manage-login.PostRegistration') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label class="form-label">Username</label>

@@ -26,10 +26,10 @@ Route::post('/manage-remark/check-edit', [RemarkController::class, 'checkEditRem
 Route::post('/manage-remark/check-delete', [RemarkController::class, 'checkDeleteRemark'])->name('manage-remark.CheckDeleteRemark');
 });
 
-//Manage Login
+// Manage Login
 Route::get('/', [LoginController::class, 'login'])->name('login');
-Route::get('/manage-login/Login', [LoginController::class, 'login'])->name('login');
+Route::get('/manage-login/Login', [LoginController::class, 'login'])->name('manage-login.Login');
 Route::post('/manage-login/Login', [LoginController::class, 'postlogin'])->name('manage-login.PostLogin');
-Route::get('/manage-login/Registration',[LoginController::class, 'registration'])->name('manage-login.Registration');
+Route::get('/manage-login/Registration', [LoginController::class, 'registration'])->name('manage-login.Registration');
 Route::post('/manage-login/Registration', [LoginController::class, 'postregistration'])->name('manage-login.PostRegistration');
 Route::post('/manage-login/Logout', [LoginController::class, 'logout'])->middleware('auth')->name('manage-login.Logout');

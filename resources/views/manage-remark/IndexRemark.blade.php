@@ -33,6 +33,10 @@
 </div>
 @endsection
 
+@push('modals')
+    @include('manage-remark.ModalRemark')
+@endpush
+
 @section('script')
 <script type="text/javascript">
     $(document).ready(function(){
@@ -112,7 +116,28 @@
                 error: function(xhr) {
                     if (xhr.status === 403) {
                         $('#blockEditModal').modal('show');
+                        return;
                     }
+
+                    let message = 'Unable to check edit permission. Please try again.';
+
+                    if (xhr.status === 401) {
+                        message = 'Your session has expired. Please log in again.';
+                    } else if (xhr.status === 404) {
+                        message = 'Remark not found or has been deleted.';
+                    } else if (xhr.status === 419) {
+                        message = 'Your session has expired. Please refresh the page.';
+                    } else if (xhr.status === 0) {
+                        message = 'Network error. Please check your connection.';
+                    } else if (xhr.status >= 500) {
+                        message = 'A server error occurred. Please try again later.';
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Edit Permission Check Failed',
+                        text: message
+                    });
                 }
             });
         });
@@ -183,7 +208,28 @@
                 error: function(xhr) {
                     if (xhr.status === 403) {
                         $('#blockDeleteModal').modal('show');
+                        return;
                     }
+
+                    let message = 'Unable to check delete permission. Please try again.';
+
+                    if (xhr.status === 401) {
+                        message = 'Your session has expired. Please log in again.';
+                    } else if (xhr.status === 404) {
+                        message = 'Remark not found or has been deleted.';
+                    } else if (xhr.status === 419) {
+                        message = 'Your session has expired. Please refresh the page.';
+                    } else if (xhr.status === 0) {
+                        message = 'Network error. Please check your connection.';
+                    } else if (xhr.status >= 500) {
+                        message = 'A server error occurred. Please try again later.';
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Delete Permission Check Failed',
+                        text: message
+                    });
                 }
             });
         });
@@ -237,9 +283,38 @@
 
     });
 
-    function showRemark(noteId){
-        $.get("{{ route('manage-remark.ListRemark') }}", { note_id: noteId }, function(data){
-            $('#remarkbody').empty().html(data);
+    function showRemark(noteId) {
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('manage-remark.ListRemark') }}",
+            data: {
+                note_id: noteId
+            },
+            dataType: 'html',
+
+            success: function(data) {
+                $('#remarkbody').empty().html(data);
+            },
+
+            error: function(xhr) {
+                let message = 'Unable to load remarks. Please try again.';
+
+                if (xhr.status === 401) {
+                    message = 'Your session has expired. Please log in again.';
+                } else if (xhr.status === 419) {
+                    message = 'Your session has expired. Please refresh the page.';
+                } else if (xhr.status === 500) {
+                    message = 'A server error occurred. Please try again later.';
+                } else if (xhr.status === 0) {
+                    message = 'Network error. Please check your connection.';
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Load Remarks',
+                    text: message
+                });
+            }
         });
     }
 </script>

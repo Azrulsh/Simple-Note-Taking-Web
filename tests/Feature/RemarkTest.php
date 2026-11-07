@@ -1124,4 +1124,84 @@ class RemarkTest extends TestCase
 
         $this->assertDatabaseCount('remark_record', 0);
     }
+
+    public function test_save_remark_rejects_non_ajax_request(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('manage-remark.SaveRemark'), [
+                'description' => 'Test Remark',
+                'note_id' => 999999,
+            ]);
+
+        $response->assertBadRequest();
+        $response->assertJsonPath('error', 'AJAX request required.');
+
+        $this->assertDatabaseCount('remark_record', 0);
+    }
+
+    public function test_update_remark_rejects_non_ajax_request(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('manage-remark.UpdateRemark'), [
+                'id' => 999999,
+                'description' => 'Updated Remark',
+            ]);
+
+        $response->assertBadRequest();
+        $response->assertJsonPath('error', 'AJAX request required.');
+    }
+
+    public function test_delete_remark_rejects_non_ajax_request(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('manage-remark.DeleteRemark'), [
+                'id' => 999999,
+            ]);
+
+        $response->assertBadRequest();
+        $response->assertJsonPath('error', 'AJAX request required.');
+    }
+
+    public function test_remark_list_requires_note_id(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->withHeaders([
+                'X-Requested-With' => 'XMLHttpRequest',
+                'Accept' => 'application/json',
+            ])
+            ->get(route('manage-remark.ListRemark'));
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors('note_id');
+    }
+
+    public function test_remark_list_rejects_nonexistent_note_id(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->withHeaders([
+                'X-Requested-With' => 'XMLHttpRequest',
+                'Accept' => 'application/json',
+            ])
+            ->get(route('manage-remark.ListRemark', [
+                'note_id' => 999999,
+            ]));
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors('note_id');
+    }
 }
