@@ -44,7 +44,7 @@ The application uses custom table names:
 | `NoteRecord` | `note_record` | Notes and their creators |
 | `RemarkRecord` | `remark_record` | Remarks associated with notes and their creators |
 
-Relationships use standard Eloquent **`hasMany`** and **`belongsTo`** associations (not polymorphic relationships):
+Relationships use standard Eloquent **`hasMany`** and **`belongsTo`** associations:
 
 - One user has many notes; each note belongs to one user.
 - One note has many remarks; each remark belongs to one note.
