@@ -66,16 +66,17 @@ class NoteController extends Controller
     {
         // Check if the logged-in user is the owner of the note
         if ($note->user_id !== Auth::id()) {
-            return redirect()->route('manage-note.IndexNote')->with('error', 'You are not authorized to update this note.');
+            return redirect()
+                ->route('manage-note.IndexNote')
+                ->with('error', 'You are not authorized to update this note.');
         }
 
-        // Validating data from EditNoteRequest
+        // Update the note using validated data
         $note->update($request->validated());
-        $note->name = $request->name;
-        $note->description = $request->description; 
-        $note->save();
-        return redirect()->route('manage-note.IndexNote')
-                         ->with('success', 'Note edited successfully.');
+
+        return redirect()
+            ->route('manage-note.IndexNote')
+            ->with('success', 'Note edited successfully.');
     }
 
     // Delete specific note in DB
