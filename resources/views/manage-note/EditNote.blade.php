@@ -15,7 +15,7 @@
             <input 
                 type="text" 
                 name="name" 
-                value="{{ $note->name }}"
+                value="{{ old('name', $note->name) }}"
                 class="form-control @error('name') is-invalid @enderror" 
                 id="inputName" 
                 placeholder="Name">
@@ -31,7 +31,7 @@
                 style="height:150px" 
                 name="description" 
                 id="inputDescription" 
-                placeholder="Description">{{ $note->description }}</textarea>
+                placeholder="Description">{{ old('description', $note->description) }}</textarea>
             @error('description')
                 <div class="form-text text-danger">{{ $message }}</div>
             @enderror

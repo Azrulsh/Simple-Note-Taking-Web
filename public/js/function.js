@@ -23,35 +23,27 @@ $(document).on('click', '#create', function(e)
     }).then((result) => {
         if (result.isConfirmed) {
             form.submit(); // Submit the form if confirmed
-            Swal.fire({
-            title: "Created!",
-            text:  "Your note has been created.",
-            icon:  "success"
-            });
         }
     });
 });
 
 // SweetAlert2 edit confirmation message
 $(document).on('click', '#edit', function(e) {
-    e.preventDefault(); // Prevent default form submission
-    var form = $(this).closest('form'); // Get the closest form element
+    e.preventDefault();
+
+    var form = $(this).closest('form');
+
     Swal.fire({
         title: "Are you sure you want to edit this note?",
-        text:  "Your previous note will be overwritten!",
-        icon:  "warning",
+        text: "Your previous note will be overwritten!",
+        icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
-        cancelButtonColor:  "#3085d6",
-        confirmButtonText:  "Yes, edit it!"
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, edit it!"
     }).then((result) => {
         if (result.isConfirmed) {
             form.submit(); // Submit the form if confirmed
-            Swal.fire({
-            title: "Edited!",
-            text:  "Your note has been edited.",
-            icon:  "success"
-            });
         }
     });
 });
@@ -71,11 +63,6 @@ $(document).on('click', '#delete', function(e) {
     }).then((result) => {
         if (result.isConfirmed) {
             form.submit(); // Submit the form if confirmed
-            Swal.fire({
-            title: "Deleted!",
-            text:  "Your note has been deleted.",
-            icon:  "success"
-            });
         }
     });
 });
