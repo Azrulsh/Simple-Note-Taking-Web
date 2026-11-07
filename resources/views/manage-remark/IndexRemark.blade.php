@@ -64,10 +64,31 @@
                 url: url,
                 data: form + `&note_id=${noteId}`, // Append note_id to the request data
                 dataType: 'json',
-                success: function(){
+                    success: function(){
                     $('#addmodal').modal('hide');
                     $('#addremark')[0].reset();
                     showRemark(noteId); // Refresh remarks for this note
+                },
+                error: function(xhr){
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON?.errors || {};
+
+                        const message = Object.values(errors)
+                            .flat()
+                            .join('\n');
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: message || 'Please check your input.'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Unable to save remark. Please try again.'
+                        });
+                    }
                 }
             });
         });
@@ -99,11 +120,50 @@
         // Edit Remark function
         $('#editremark').on('submit', function(e){
             e.preventDefault();
+
             var form = $(this).serialize();
             var url = $(this).attr('action');
-            $.post(url, form, function(data){
-                $('#editmodal').modal('hide');
-                showRemark(noteId); 
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: form,
+                dataType: 'json',
+
+                success: function() {
+                    $('#editmodal').modal('hide');
+                    showRemark(noteId);
+                },
+
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        const message =
+                            xhr.responseJSON?.errors?.description?.[0] ||
+                            xhr.responseJSON?.message ||
+                            'Please check your input.';
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: message
+                        });
+
+                    } else if (xhr.status === 403) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unauthorized',
+                            text: xhr.responseJSON?.error ||
+                                'You are not authorized to update this remark.'
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Unable to update remark. Please try again.'
+                        });
+                    }
+                }
             });
         });
 
@@ -131,9 +191,47 @@
         // Delete Remark function
         $('#deleteremark').click(function(){
             var id = $(this).data('id');
-            $.post("{{ route('manage-remark.DeleteRemark') }}", { id: id }, function(){
-                $('#deletemodal').modal('hide');
-                showRemark(noteId); 
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('manage-remark.DeleteRemark') }}",
+                data: { id: id },
+                dataType: 'json',
+
+                success: function() {
+                    $('#deletemodal').modal('hide');
+                    showRemark(noteId);
+                },
+
+                error: function(xhr) {
+                    if (xhr.status === 403) {
+                        $('#deletemodal').modal('hide');
+                        $('#blockDeleteModal').modal('show');
+
+                    } else if (xhr.status === 419) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Session Expired',
+                            text: 'Please refresh the page and try again.'
+                        });
+
+                    } else if (xhr.status === 422 || xhr.status === 404) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Delete Failed',
+                            text: xhr.responseJSON?.errors?.id?.[0]
+                                || xhr.responseJSON?.message
+                                || 'Remark not found or invalid.'
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Unable to delete remark. Please try again.'
+                        });
+                    }
+                }
             });
         });
 

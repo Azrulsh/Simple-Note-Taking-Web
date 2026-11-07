@@ -35,7 +35,7 @@
           <input type="hidden" id="remarkid" name="id">
           <div class="mb-3">
               <label for="description">Description</label>
-              <input type="text" name="description" id="description" class="form-control">
+              <input type="text" name="description" id="description" class="form-control" placeholder="Please edit your remark">
           </div>
       </div>
       <div class="modal-footer d-flex justify-content-center">
