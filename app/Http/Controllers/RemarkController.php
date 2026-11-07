@@ -13,14 +13,15 @@ class RemarkController extends Controller
     public function index(Request $request)
     {
         $note_id = $request->input('note_id');
-        $note = NoteRecord::find($note_id); // Fetch id on note_record to identify the remark related to note
 
-        // Handle missing note_id data
         if (!$note_id) {
-            return redirect()->route('manage-note.IndexNote')
-                             ->withErrors('Note ID is missing. Please return to the main page and try again.');
+            return redirect()
+                ->route('manage-note.IndexNote')
+                ->withErrors('Note ID is missing. Please return to the main page and try again.');
         }
-        // Pass the note_id and note to the view
+
+        $note = NoteRecord::findOrFail($note_id);
+
         return view('manage-remark.IndexRemark', compact('note_id', 'note'));
     }
 
